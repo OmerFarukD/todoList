@@ -10,13 +10,14 @@ public final class MissionMessages {
         return message;
     }
 
-    public static  String missionNotFoundByTitleMessage(String message){
-        String response = "Başlık : " + message + " olan görev bulunamadı.";
+    public static  String missionTitleMustBeUnique(String message){
+        String response = "Başlık : " + message + " olan görev zaten var.";
         return response;
     }
 
     public static final String missionDeletedMessage = "Görev Silindi.";
     public static final String missionAddedMessage = "Görev Eklendi.";
     public static final String missionUpdatedMessage = "Görev Güncellendi.";
+    public static final String missionCompletedMessage = "Görev tamamlandı.";
 
 }

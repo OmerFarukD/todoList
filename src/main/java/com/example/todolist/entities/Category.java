@@ -25,7 +25,7 @@ public class Category {
         this.name = name;
     }
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Mission> missions;
 
 

@@ -35,8 +35,14 @@ public class Paginate<T> {
     }
 
     public void setCount(int count) {
-        this.count = count;
-        this.pages = (int) Math.ceil((double) count / size);
+
+        if (size!=0){
+            this.count = count;
+            this.pages = (int) Math.ceil((double) count / size);
+        } else {
+            this.pages = 0;
+        }
+
     }
 
     public int getPages() {

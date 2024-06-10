@@ -11,27 +11,26 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public final class MissionPaginate implements MissionPaginateRepository {
+public non-sealed class MissionPaginate implements MissionPaginateRepository {
 
     private final EntityManager entityManager;
     @Override
     public Paginate<MissionResponseDto> getAllByPaginate(PageRequest pageRequest) {
         Paginate<Mission> missionPaginate = new Paginate<>();
-        missionPaginate.setSize(pageRequest.size());
-        missionPaginate.setIndex(pageRequest.index());
+
 
         String countQuery ="SELECT COUNT(m) FROM Mission m";
-        int count = entityManager.createQuery(countQuery,Integer.class).getSingleResult();
-
-        missionPaginate.setCount(count);
-
-
-        String  jpql = "SELECT m From Mission m ORDER BY m.title asc";
+        Long count = entityManager.createQuery(countQuery,Long.class).getSingleResult();
+        int countAsInt = count.intValue();
+        String  jpql = "SELECT m From Mission m ORDER BY m.id asc";
         TypedQuery<Mission> query =  entityManager.createQuery(jpql,Mission.class);
+
 
         query.setFirstResult(pageRequest.index()* pageRequest.size());
         query.setMaxResults(pageRequest.size());
-
+        missionPaginate.setSize(pageRequest.size());
+        missionPaginate.setIndex(pageRequest.index());
+        missionPaginate.setCount(countAsInt);
         missionPaginate.setItems(query.getResultList());
 
 

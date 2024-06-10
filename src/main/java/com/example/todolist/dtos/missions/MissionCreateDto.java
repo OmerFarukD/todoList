@@ -22,9 +22,6 @@ public record MissionCreateDto(
         @NotBlank
         String description,
 
-        @NotNull
-        @NotEmpty
-        @NotBlank
         Priority priority,
         Date startTime,
         Date endDate,
@@ -46,8 +43,6 @@ public record MissionCreateDto(
                 .title(missionCreateDto.title)
                 .startTime(missionCreateDto.startTime)
                 .build();
-
-
     }
 
 }

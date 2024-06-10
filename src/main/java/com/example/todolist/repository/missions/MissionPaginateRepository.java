@@ -7,7 +7,7 @@ import com.example.todolist.utils.pagination.Paginate;
 
 import java.util.List;
 
-public sealed interface MissionPaginateRepository permits MissionPaginate {
+public sealed interface MissionPaginateRepository permits MissionPaginate  {
 
     default Paginate<MissionResponseDto> convertToPaginateDto(Paginate<Mission> missionPaginate){
 
@@ -18,9 +18,10 @@ public sealed interface MissionPaginateRepository permits MissionPaginate {
                         .stream()
                                 .map(MissionResponseDto::convertToResponseDto)
                                         .toList();
+
+        responseDtoPaginate.setSize(missionPaginate.getSize());
         responseDtoPaginate.setCount(missionPaginate.getCount());
         responseDtoPaginate.setIndex(missionPaginate.getIndex());
-        responseDtoPaginate.setSize(missionPaginate.getSize());
         responseDtoPaginate.setItems(dtos);
         return responseDtoPaginate;
     }

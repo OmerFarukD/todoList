@@ -44,7 +44,7 @@ public class Mission {
     @Column(name = "end_date")
     private Date endDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 

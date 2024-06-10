@@ -1,5 +1,4 @@
 package com.example.todolist.services.categories;
-
 import com.example.todolist.dtos.categories.CategoryAddDto;
 import com.example.todolist.dtos.categories.CategoryResponseDto;
 import com.example.todolist.entities.Category;
@@ -8,7 +7,6 @@ import com.example.todolist.utils.results.NoDataDto;
 import com.example.todolist.utils.results.ReturnModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -23,7 +21,7 @@ public final class CategoryManager implements  CategoryService{
         Category category = CategoryAddDto.convertToEntity(categoryAddDto);
         this.categoryRepository.save(category);
 
-        return ReturnModel.success("Kategori eklendi");
+        return ReturnModel.success(CategoryMessages.categoryAddedMessage);
     }
 
     @Override
@@ -33,7 +31,6 @@ public final class CategoryManager implements  CategoryService{
                 .stream()
                 .map(CategoryResponseDto::convertToResponseDto)
                 .toList();
-
-        return ReturnModel.success(dtos,"Kategoriler Listelendi.");
+        return ReturnModel.success(dtos,CategoryMessages.categoryListedMessage);
     }
 }
