@@ -12,6 +12,9 @@ import com.example.todolist.utils.pagination.Paginate;
 import com.example.todolist.utils.results.NoDataDto;
 import com.example.todolist.utils.results.ReturnModel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -20,13 +23,16 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public final class MissionManager implements MissionService {
+public non-sealed class MissionManager implements MissionService {
 
     private final MissionRepository missionRepository;
     private final MissionBusinessRules businessRules;
     private final MissionPaginateRepository paginateRepository;
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = MissionMessages.missionCache, allEntries = true)
+    })
     public ReturnModel<MissionResponseDto> createMission(MissionCreateDto dto) {
 
         businessRules.missionTitleMustBeUnique(dto.title());
@@ -40,6 +46,7 @@ public final class MissionManager implements MissionService {
     }
 
     @Override
+    @Cacheable(cacheNames = MissionMessages.missionCache, key = "'allMissions'")
     public ReturnModel<List<MissionResponseDto>> getAll() {
         List<Mission> missions = this.missionRepository.findAll();
         List<MissionResponseDto> responseDtos = missions
@@ -51,6 +58,7 @@ public final class MissionManager implements MissionService {
     }
 
     @Override
+    @Cacheable(cacheNames = MissionMessages.missionCache, key = "#id")
     public ReturnModel<MissionResponseDto> getById(Long id) {
         Mission mission = this.missionRepository.findById(id).orElseThrow(()-> new NotFoundException(MissionMessages.missionNotFoundMessage(id)));
         return ReturnModel.success(MissionResponseDto.convertToResponseDto(mission));
@@ -58,6 +66,7 @@ public final class MissionManager implements MissionService {
     }
 
     @Override
+    @Cacheable(cacheNames = MissionMessages.missionCache, key = "(#pageRequest.index().toString() + #pageRequest.size().toString())")
     public ReturnModel<Paginate<MissionResponseDto>> getAllByPaginate(PageRequest pageRequest) {
 
         Paginate<MissionResponseDto> pages = paginateRepository.getAllByPaginate(pageRequest);
@@ -67,6 +76,7 @@ public final class MissionManager implements MissionService {
     }
 
     @Override
+    @CacheEvict(cacheNames = MissionMessages.missionCache, key="#id")
     public ReturnModel<NoDataDto> delete(Long id) {
         Mission mission = this.missionRepository.findById(id).orElseThrow(()-> new NotFoundException(MissionMessages.missionNotFoundMessage(id)));
 
@@ -75,6 +85,9 @@ public final class MissionManager implements MissionService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = MissionMessages.missionCache, allEntries = true)
+    })
     public ReturnModel<MissionResponseDto> update(MissionUpdateDto dto) {
         Mission mission = this.missionRepository.findById(dto.id()).orElseThrow(()-> new NotFoundException(MissionMessages.missionNotFoundMessage(dto.id())));
         mission.setMissionStatus(dto.missionStatus());
@@ -91,6 +104,10 @@ public final class MissionManager implements MissionService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = MissionMessages.missionCache, allEntries = true)
+    })
+
     public ReturnModel<NoDataDto> completeMission(Long id) {
         Mission mission = this.missionRepository.findById(id).orElseThrow(()-> new NotFoundException(MissionMessages.missionNotFoundMessage(id)));
         mission.setMissionStatus(MissionStatus.DONE);

@@ -20,4 +20,6 @@ public final class MissionMessages {
     public static final String missionUpdatedMessage = "Görev Güncellendi.";
     public static final String missionCompletedMessage = "Görev tamamlandı.";
 
+    public static final String missionCache = "missions";
+
 }
